@@ -16,51 +16,51 @@ const progressBar = document.getElementById("progress");
 
 // Quiz Questions
 const quizQuestions = [
-  {
-    question: "What is the capital of France?",
-    answers: [
-      { text: "London", correct: false },
-      { text: "Berlin", correct: false },
-      { text: "Paris", correct: true },
-      { text: "Madrid", correct: false },
-    ],
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    answers: [
-      { text: "Venus", correct: false },
-      { text: "Mars", correct: true },
-      { text: "Jupiter", correct: false },
-      { text: "Saturn", correct: false },
-    ],
-  },
-  {
-    question: "What is the largest ocean on Earth?",
-    answers: [
-      { text: "Atlantic Ocean", correct: false },
-      { text: "Indian Ocean", correct: false },
-      { text: "Arctic Ocean", correct: false },
-      { text: "Pacific Ocean", correct: true },
-    ],
-  },
-  {
-    question: "Which of these is NOT a programming language?",
-    answers: [
-      { text: "Java", correct: false },
-      { text: "Python", correct: false },
-      { text: "Banana", correct: true },
-      { text: "JavaScript", correct: false },
-    ],
-  },
-  {
-    question: "What is the chemical symbol for gold?",
-    answers: [
-      { text: "Go", correct: false },
-      { text: "Gd", correct: false },
-      { text: "Au", correct: true },
-      { text: "Ag", correct: false },
-    ],
-  },
+    {
+        question: "What is the capital of France?",
+        answers: [
+            { text: "London", correct: false },
+            { text: "Berlin", correct: false },
+            { text: "Paris", correct: true },
+            { text: "Madrid", correct: false },
+        ],
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        answers: [
+            { text: "Venus", correct: false },
+            { text: "Mars", correct: true },
+            { text: "Jupiter", correct: false },
+            { text: "Saturn", correct: false },
+        ],
+    },
+    {
+        question: "What is the largest ocean on Earth?",
+        answers: [
+            { text: "Atlantic Ocean", correct: false },
+            { text: "Indian Ocean", correct: false },
+            { text: "Arctic Ocean", correct: false },
+            { text: "Pacific Ocean", correct: true },
+        ],
+    },
+    {
+        question: "Which of these is NOT a programming language?",
+        answers: [
+            { text: "Java", correct: false },
+            { text: "Python", correct: false },
+            { text: "Banana", correct: true },
+            { text: "JavaScript", correct: false },
+        ],
+    },
+    {
+        question: "What is the chemical symbol for gold?",
+        answers: [
+            { text: "Go", correct: false },
+            { text: "Gd", correct: false },
+            { text: "Au", correct: true },
+            { text: "Ag", correct: false },
+        ],
+    },
 ];
 
 // Quiz States
@@ -77,36 +77,88 @@ restartButton.addEventListener("click", restartQuiz);
 
 // Quiz Functions
 
-
-
 function startQuiz() {
-  currentQuistionIndex = 0;
-  score = 0
+    currentQuistionIndex = 0;
+    score = 0;
 
-  startScreen.classList.remove("active");
-  quizScreen.classList.add("active")
+    startScreen.classList.remove("active");
+    quizScreen.classList.add("active");
 
-  showQuestion()
+    showQuestion();
 }
 
-function restartQuiz() { }
+function restartQuiz() {
+    resultScreen.classList.remove("active");
+    startQuiz();
+}
 
 function showQuestion() {
-  answerDisabled = false;
-  const currentQuestion = quizQuestions[currentQuistionIndex];
-  currentQuestionSpan.textContent = currentQuistionIndex + 1;
+    answerDisabled = false;
+    const currentQuestion = quizQuestions[currentQuistionIndex];
+    currentQuestionSpan.textContent = currentQuistionIndex + 1;
 
-  const progressPercentage = (currentQuistionIndex / quizQuestions.length) * 100;
-  progressBar.style.width = `${progressPercentage}%`;
-  questionText.textContent = currentQuestion.question;
+    const progressPercentage =
+        (currentQuistionIndex / quizQuestions.length) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+    questionText.textContent = currentQuestion.question;
 
-  answersContainer.innerHTML = "";
+    answersContainer.innerHTML = "";
 
-  currentQuestion.answers.forEach(answer => {
-    const button = document.createElement("button");
-    button.classList.add("answer-btn");
-    button.textContent = answer.text;
-    button.dataset.correct = answer.correct;
-    answersContainer.appendChild(button);
-  })
+    currentQuestion.answers.forEach((answer) => {
+        const button = document.createElement("button");
+        button.classList.add("answer-btn");
+        button.textContent = answer.text;
+        button.dataset.correct = answer.correct;
+        answersContainer.appendChild(button);
+        button.addEventListener("click", selectAnswer);
+    });
+}
+
+function selectAnswer(event) {
+    if (answerDisabled) return;
+    const selectedButton = event.target;
+    const isCorrect = selectedButton.dataset.correct === "true";
+    Array.from(answersContainer.children).forEach((button) => {
+        if (button.dataset.correct === "true") {
+            button.classList.add("correct");
+        } else {
+            button.classList.add("incorrect");
+        }
+    });
+
+    if (isCorrect) {
+        score++;
+        scoreSpan.textContent = score;
+    }
+
+    setTimeout(() => {
+        currentQuistionIndex++;
+
+        if (currentQuistionIndex < quizQuestions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }, 1000);
+}
+
+function showResult() {
+    quizScreen.classList.remove("active");
+    resultScreen.classList.add("active");
+
+    finalScoreSpan.textContent = score;
+
+    const percentage = (score / quizQuestions.lenght) * 100;
+
+    if (percentage === 100) {
+        resultMessage.textContent = "Perfect! You're a genius!";
+    } else if (percentage >= 80) {
+        resultMessage.textContent = "Great job! You know your stuff!";
+    } else if (percentage >= 60) {
+        resultMessage.textContent = "Good effort! Keep practicing!";
+    } else if (percentage >= 40) {
+        resultMessage.textContent = "Not bad, but you can do better!";
+    } else {
+        resultMessage.textContent = "Needs improvement. Keep trying!";
+    }
 }
