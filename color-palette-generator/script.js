@@ -1,17 +1,30 @@
 // Element Target
 const generateBtn = document.querySelector("#generate-btn");
 const colorBoxes = document.querySelectorAll(".color-box");
+const copyAllBtn = document.querySelector("#copy-all-btn");
 
+generateBtn.addEventListener("click", generatePalette);
 
-generateBtn.addEventListener("click", generatePalette)
+copyAllBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(localStorage.getItem("all-colors"));
+  copyAllBtn.querySelector(":scope > span").textContent = "Copied!"
+  setTimeout(() => {
+    copyAllBtn.querySelector(":scope > span").textContent = "Copy All Colors"
+  }, 1000)
+})
+
 
 function generatePalette() {
+
   let colors = [];
+
   for (let i = 0; i < 5; i++) {
     colors.push(generateRandomColor())
   }
 
   displayPaletteUI(colors)
+  localStorage.setItem("all-colors", colors.join(" "));
+
 }
 
 function generateRandomColor() {
