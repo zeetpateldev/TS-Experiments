@@ -16,10 +16,10 @@
 			<header class="board__header">
 				<h2 id="todo-title">Todo</h2>
 			</header>
-			<ul class="board__list" aria-label="Todo tasks">
-				<li class="board__card" id="card-todo-1" draggable="true">Sketch the app layout</li>
-				<li class="board__card" id="card-todo-2" draggable="true">Define board data model</li>
-				<li class="board__card" id="card-todo-3" draggable="true">Create initial HTML structure</li>
+			<ul class="board__list" aria-label="Todo tasks" data-column="todo">
+				<li class="board__card" draggable="true">Sketch the app layout</li>
+				<li class="board__card" draggable="true">Define board data model</li>
+				<li class="board__card" draggable="true">Create initial HTML structure</li>
 			</ul>
 		</section>
 
@@ -27,9 +27,9 @@
 			<header class="board__header">
 				<h2 id="progress-title">In Progress</h2>
 			</header>
-			<ul class="board__list" aria-label="In Progress tasks">
-				<li class="board__card" id="card-progress-1" draggable="true">Style the board columns</li>
-				<li class="board__card" id="card-progress-2" draggable="true">Polish spacing and typography</li>
+			<ul class="board__list" aria-label="In Progress tasks" data-column="progress">
+				<li class="board__card" draggable="true">Style the board columns</li>
+				<li class="board__card" draggable="true">Polish spacing and typography</li>
 			</ul>
 		</section>
 
@@ -37,9 +37,9 @@
 			<header class="board__header">
 				<h2 id="complete-title">Complete</h2>
 			</header>
-			<ul class="board__list" aria-label="Complete tasks">
-				<li class="board__card" id="card-complete-1" draggable="true">Set up project structure</li>
-				<li class="board__card" id="card-complete-2" draggable="true">Add base CSS reset</li>
+			<ul class="board__list" aria-label="Complete tasks" data-column="complete">
+				<li class="board__card" draggable="true">Set up project structure</li>
+				<li class="board__card" draggable="true">Add base CSS reset</li>
 			</ul>
 		</section>
 	</main>
