@@ -18,7 +18,7 @@ function generatePalette() {
 
   let colors = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < colorBoxes.length; i++) {
     colors.push(generateRandomColor())
   }
 
