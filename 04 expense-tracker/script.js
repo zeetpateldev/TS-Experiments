@@ -1,0 +1,84 @@
+const balanceEl = document.getElementById("balance");
+const incomeAmountEl = document.getElementById("income-amount");
+const expenseAmountEl = document.getElementById("expense-amount");
+const transactionListEl = document.getElementById("transaction-list");
+const transactionFormEl = document.getElementById("transaction-form");
+const descriptionEl = document.getElementById("description");
+const amountEl = document.getElementById("amount");
+
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+transactionFormEl.addEventListener("submit", addTransaction);
+
+function addTransaction(e) {
+  e.preventDefault()
+
+  const description = descriptionEl.value.trim();
+  const amount = Number(amountEl.value)
+
+  transactions.push({
+    id: Date.now(),
+    description,
+    amount,
+  })
+
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  updateTransactionList()
+  updateTransactionSummary()
+
+  this.reset();
+}
+
+
+function updateTransactionList() {
+  transactionListEl.innerHTML = "";
+
+  const sortedTransactionData = [...transactions].reverse();
+  sortedTransactionData.forEach((transaction) => {
+    const transactionElement = createTransactionElement(transaction)
+    transactionListEl.appendChild(transactionElement);
+  })
+}
+
+function createTransactionElement(transaction) {
+  const li = document.createElement("li");
+  li.classList.add("transaction", transaction.amount > 0 ? "income" : "expense");
+  li.innerHTML = `
+    <span>${transaction.description}</span>
+    <span>${formatCurrency(transaction.amount)}</span>
+    <button class="delete-btn" onclick="removeTransaction(${transaction.id})">X</button>
+    `
+
+  return li;
+}
+
+function updateTransactionSummary() {
+  const balance = transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+  const income = transactions.filter((transaction) => transaction.amount > 0).reduce((acc, transaction) => acc + transaction.amount, 0);
+  const expanse = transactions.filter((transaction) => transaction.amount < 0).reduce((acc, transaction) => acc + transaction.amount, 0);
+
+  balanceEl.textContent = formatCurrency(balance);
+  incomeAmountEl.textContent = formatCurrency(income);
+  expenseAmountEl.textContent = formatCurrency(expanse);
+}
+
+function removeTransaction(id) {
+  transactions = transactions.filter((transaction) => transaction.id != id);
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+
+  updateTransactionList()
+  updateTransactionSummary()
+}
+
+window.removeTransaction = removeTransaction;
+
+function formatCurrency(number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(number)
+}
+
+updateTransactionList()
+updateTransactionSummary()
